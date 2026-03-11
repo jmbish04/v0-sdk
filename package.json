@@ -10,10 +10,10 @@
     "migrate:db": "wrangler d1 migrations apply v0-clone-db --local",
     "migrate:prod": "wrangler d1 migrations apply v0-clone-db --remote",
     "generate:db": "drizzle-kit generate",
-    "lint": "echo 'No linting needed'",
-    "format:check": "echo 'No formatting checks needed'",
-    "type-check": "echo 'No type checking needed'",
-    "test": "echo 'No tests yet'"
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.9",
@@ -43,7 +43,10 @@
   },
   "devDependencies": {
     "drizzle-kit": "^0.24.2",
+    "eslint": "^10.0.3",
+    "prettier": "^3.8.1",
     "typescript": "^5.5.4",
+    "vitest": "^3.2.4",
     "wrangler": "^3.72.0"
   }
 }

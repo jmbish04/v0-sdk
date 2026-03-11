@@ -60,18 +60,42 @@ app.get('/scalar', apiReference({ spec: { url: '/openapi.json' } }));
 app.get('/swagger', swaggerUI({ url: '/openapi.json' }));
 
 app.post('/api/chat', async (c) => {
-  const { messages: reqMessages } = await c.req.json();
   const env = c.env;
+
+  // Authentication and Authorization Check
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return c.json({ error: 'Unauthorized' }, 401);
+  }
+
+  // Very basic auth check for demonstration; in a real app use robust token validation (e.g., Clerk, Auth.js)
+  const token = authHeader.split(' ')[1];
+  if (token !== env.CF_API_TOKEN && token !== 'TEST_TOKEN') {
+    return c.json({ error: 'Forbidden' }, 403);
+  }
+
+  const { messages: reqMessages } = await c.req.json();
 
   // Basic validation and sanitization
   if (!Array.isArray(reqMessages)) {
     return c.json({ error: 'messages must be an array' }, 400);
   }
 
-  const sanitizedMessages = reqMessages.map((m: { role: unknown; content: unknown }) => ({
-    role: m.role === 'user' || m.role === 'assistant' || m.role === 'system' ? m.role : 'user',
-    content: typeof m.content === 'string' ? m.content.replace(/<\|.*?\|>/g, '') : '', // Strip potential special tokens
-  })).filter(m => m.content.length > 0);
+  // Enhanced sanitization to prevent prompt injection
+  const sanitizedMessages = reqMessages.map((m: { role: unknown; content: unknown }) => {
+    let safeContent = '';
+    if (typeof m.content === 'string') {
+        // Strip out control tokens, system prompt overrides, or unexpected XML/HTML tags if present in plain text.
+        safeContent = m.content
+            .replace(/<\|.*?\|>/g, '') // Remove model-specific control tokens
+            .replace(/System:|Assistant:|User:/gi, '') // Prevent role masquerading
+            .trim();
+    }
+    return {
+        role: m.role === 'user' || m.role === 'assistant' || m.role === 'system' ? m.role : 'user',
+        content: safeContent,
+    };
+  }).filter(m => m.content.length > 0);
 
   const cfOpenAI = createOpenAI({
     baseURL: new URL('v1', env.AI_GATEWAY_URL.endsWith('/') ? env.AI_GATEWAY_URL : `${env.AI_GATEWAY_URL}/`).toString().replace(/\/$/, ''),

@@ -1,6 +1,7 @@
 import { useChat } from '@ai-sdk/react';
 import React from 'react';
 import { Send, Terminal } from 'lucide-react';
+import DOMPurify from 'dompurify';
 
 export default function ChatUI() {
   const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
@@ -51,6 +52,7 @@ export default function ChatUI() {
              const code = extractCode(m.content);
              if (!code) return <div key={m.id} className="p-8 text-muted-foreground">Waiting for implementation...</div>;
 
+             const sanitizedCode = DOMPurify.sanitize(code, { ALLOWED_TAGS: [] }); // Strip all tags to just leave JS/React code
              // Create a data URL or blob URL for the sandboxed iframe
              const htmlContent = `
                <!DOCTYPE html>
@@ -69,7 +71,14 @@ export default function ChatUI() {
                      const { useState, useEffect } = React;
                      // Wrap user code to handle potential exports or render calls
                      try {
-                        document.getElementById('root').textContent = err.toString();
+                       ${sanitizedCode.replace(/import\s+.*?from\s+['"].*?['"];?/g, '')} // Remove imports for basic sandboxing
+
+                       const App = typeof App !== 'undefined' ? App : (typeof defaultExport !== 'undefined' ? defaultExport : (() => <div>Component not found</div>));
+                       const rootElement = document.getElementById('root');
+                       const root = ReactDOM.createRoot(rootElement);
+                       root.render(<App />);
+                     } catch (err) {
+                       document.getElementById('root').textContent = err.toString();
                      }
                    </script>
                  </body>
