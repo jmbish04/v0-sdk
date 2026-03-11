@@ -9,5 +9,5 @@ CREATE TABLE `messages` (
 	`role` text NOT NULL,
 	`content` text NOT NULL,
 	`created_at` integer NOT NULL,
-	FOREIGN KEY (`chat_id`) REFERENCES `chats`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`chat_id`) REFERENCES `chats`(`id`) ON UPDATE no action ON DELETE CASCADE
 );
