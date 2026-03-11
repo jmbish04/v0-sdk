@@ -69,14 +69,7 @@ export default function ChatUI() {
                      const { useState, useEffect } = React;
                      // Wrap user code to handle potential exports or render calls
                      try {
-                       ${code.replace(/import\s+.*?from\s+['"].*?['"];?/g, '')} // Remove imports for basic sandboxing
-
-                       const App = typeof App !== 'undefined' ? App : (typeof defaultExport !== 'undefined' ? defaultExport : (() => <div>Component not found</div>));
-                       const rootElement = document.getElementById('root');
-                       const root = ReactDOM.createRoot(rootElement);
-                       root.render(<App />);
-                     } catch (err) {
-                       document.getElementById('root').innerHTML = '<div style="color: red; font-family: monospace; padding: 1rem;">' + err.toString() + '</div>';
+                        document.getElementById('root').textContent = err.toString();
                      }
                    </script>
                  </body>
