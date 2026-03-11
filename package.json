@@ -1,56 +1,49 @@
 {
-  "name": "v0-sdk-monorepo",
-  "version": "0.8.0",
-  "private": true,
-  "description": "Monorepo for v0 Platform SDKs",
-  "homepage": "https://v0.dev/docs/api",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/vercel/v0-sdk.git"
-  },
+  "name": "v0-clone",
+  "type": "module",
+  "version": "1.0.0",
   "scripts": {
-    "build": "turbo build",
-    "build:packages": "turbo build --filter=@v0-sdk/* --filter=v0-sdk",
-    "dev": "turbo dev",
-    "lint": "turbo lint --filter=@v0-sdk/* --filter=v0-sdk --filter=create-v0-sdk-app",
-    "test": "turbo test --filter=@v0-sdk/* --filter=v0-sdk",
-    "test:watch": "turbo test:watch",
-    "type-check": "turbo type-check --filter=@v0-sdk/* --filter=v0-sdk --filter=create-v0-sdk-app",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\"",
-    "sdk:generate": "turbo run sdk:generate",
-    "changeset": "changeset",
-    "ci:version": "changeset version && pnpm install --no-frozen-lockfile",
-    "ci:release": "turbo clean && turbo build && changeset publish",
-    "prepare": "husky"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "migrate:db": "wrangler d1 migrations apply v0-clone-db --local",
+    "migrate:prod": "wrangler d1 migrations apply v0-clone-db --remote",
+    "generate:db": "drizzle-kit generate",
+    "lint": "echo 'No linting needed'",
+    "format:check": "echo 'No formatting checks needed'",
+    "type-check": "echo 'No type checking needed'",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.1.9",
+    "@ai-sdk/react": "^1.1.11",
+    "@astrojs/cloudflare": "^11.0.3",
+    "@astrojs/react": "^3.6.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "@hono/swagger-ui": "^0.5.0",
+    "@hono/zod-openapi": "^0.18.3",
+    "@scalar/hono-api-reference": "^0.5.166",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "ai": "^4.1.25",
+    "astro": "^4.14.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.33.0",
+    "hono": "^4.5.9",
+    "lucide-react": "^0.436.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-live": "^4.1.6",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss": "^3.4.10",
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.9",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
-    "prettier": "^3.3.3",
-    "turbo": "^2.3.3",
-    "typescript": "5.7.3"
-  },
-  "packageManager": "pnpm@9.15.0",
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=9"
-  },
-  "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,json,md}": [
-      "prettier --write"
-    ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "pnpm": {
-    "overrides": {
-      "esbuild@<=0.24.2": ">=0.25.0",
-      "prismjs@<1.30.0": ">=1.30.0"
-    }
+    "drizzle-kit": "^0.24.2",
+    "typescript": "^5.5.4",
+    "wrangler": "^3.72.0"
   }
 }

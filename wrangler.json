@@ -1,0 +1,17 @@
+{
+  "name": "v0-clone",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2024-03-20",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "v0-clone-db",
+      "database_id": "REPLACE_WITH_YOUR_D1_ID",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "vars": {
+    "AI_GATEWAY_URL": "https://gateway.ai.cloudflare.com/v1/YOUR_ACCOUNT_ID/v0-clone-gateway/cloudflare"
+  }
+}
