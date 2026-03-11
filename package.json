@@ -10,7 +10,11 @@
     "astro": "astro",
     "migrate:db": "wrangler d1 migrations apply v0-clone-db --local",
     "migrate:prod": "wrangler d1 migrations apply v0-clone-db --remote",
-    "generate:db": "drizzle-kit generate"
+    "generate:db": "drizzle-kit generate",
+    "lint": "echo 'No linting needed'",
+    "format:check": "echo 'No formatting checks needed'",
+    "type-check": "echo 'No type checking needed'",
+    "test": "echo 'No tests yet'"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.9",
