@@ -68,7 +68,7 @@ app.post('/api/chat', async (c) => {
     return c.json({ error: 'messages must be an array' }, 400);
   }
 
-  const sanitizedMessages = reqMessages.map((m: any) => ({
+  const sanitizedMessages = reqMessages.map((m: { role: unknown; content: unknown }) => ({
     role: m.role === 'user' || m.role === 'assistant' || m.role === 'system' ? m.role : 'user',
     content: typeof m.content === 'string' ? m.content.replace(/<\|.*?\|>/g, '') : '', // Strip potential special tokens
   })).filter(m => m.content.length > 0);
